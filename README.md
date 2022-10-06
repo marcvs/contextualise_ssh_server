@@ -11,8 +11,27 @@ contextualise-ssh-server is available on [PyPI](https://pypi.org/project/context
 pip install contextualise_ssh_server
 ```
 
-You can also install from the git repository:
-```
-git clone https://github.com/marcvs/contextualise_ssh_server
-pip install -e ./contextualise_ssh_server
-```
+
+# Configuration
+
+Config is read from `/etc/contextualise_ssh_server.conf` 
+
+There is a default config file in the place where pip installs this package
+
+There you will also find templates for motley_cue.conf and feudal_adapter.conf
+
+
+## Environment Variables
+
+These control the behaviour:
+
+- `SSH_AUTHORISE_OTHERS_IN_MY_VO`: If set to a nonempty value ALL members of
+    ALL VOs of the user will be authorised to log in.
+
+
+- `SSH_AUTHORISE_VOS`: If the above variable is not set and this variable
+    specifies a json list of VOs (actually AARC-G069/G027 Entitlements) to
+    authorise. Example
+
+`export SSH_AUTHORISE_VOS="['urn:mace:egi.eu:group:cryoem.instruct-eric.eu:admins:role=owner#aai.egi.eu', 'urn:mace:egi.eu:group:umsa.cerit-sc.cz:admins:role=owner#aai.egi.eu']`
+
