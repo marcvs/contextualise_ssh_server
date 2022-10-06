@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 from configparser import ConfigParser
 from configparser import ExtendedInterpolation
-from parse_args import args
+from contextualise_ssh_server.parse_args import args
 
 logger = logging.getLogger(__name__)
 
@@ -34,10 +34,11 @@ def load_config():
     """
     files = []
 
+
     files += [
         Path(F'/etc/{args.basename}.conf'),
-        Path(Path.home(), '.config', F'. {args.basename}conf'),
-        Path(F'./{args.basename}.conf')
+        Path(F'./{args.basename}.conf'),
+        Path(F'{args.dirname}/{args.basename}.conf')
     ]
 
     try:

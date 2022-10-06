@@ -9,7 +9,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import sys
 
-from parse_args import args
+from contextualise_ssh_server.parse_args import args
 
 # logger = logging.getLogger(__name__)
 logger = logging.getLogger('')  # => This is the key to allow logging from other modules

@@ -11,6 +11,7 @@ def parseOptions():
 
     folder_of_executable = os.path.split(sys.argv[0])[0]
     basename = os.path.basename(sys.argv[0]).rstrip('.py')
+    dirname  = os.path.dirname(__file__)
 
     config_dir  = os.environ['HOME']+F'/.config/{basename}'
     # config_file = os.environ['HOME']+F'/.config/{basename}.conf'
@@ -29,6 +30,7 @@ def parseOptions():
     parser.add_argument('--config',     '-c',   default=config_file,
             help="config file")
     parser.add_argument('--basename',           default=basename)
+    parser.add_argument('--dirname',            default=dirname)
     parser.add_argument('--logfile',            default=log_file, help='logfile')
     parser.add_argument('--loglevel',           default=os.environ.get("LOG", "WARNING").upper(),
                                                 help='Debugging Level')

@@ -5,4 +5,4 @@ __email__ = "hardt@kit.edu"
 __version__ = "v0.1.0"
 
 
-from .contextualise_ssh_server import Foo
+# from .contextualise_ssh_server import logsetup
