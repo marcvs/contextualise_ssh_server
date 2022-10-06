@@ -31,7 +31,8 @@ These control the behaviour:
 
 - `SSH_AUTHORISE_VOS`: If the above variable is not set and this variable
     specifies a json list of VOs (actually AARC-G069/G027 Entitlements) to
-    authorise. Example
+    authorise. 
 
-`export SSH_AUTHORISE_VOS="['urn:mace:egi.eu:group:cryoem.instruct-eric.eu:admins:role=owner#aai.egi.eu', 'urn:mace:egi.eu:group:umsa.cerit-sc.cz:admins:role=owner#aai.egi.eu']`
+    Example:
+    `export SSH_AUTHORISE_VOS="['urn:mace:egi.eu:group:cryoem.instruct-eric.eu:admins:role=owner#aai.egi.eu', 'urn:mace:egi.eu:group:umsa.cerit-sc.cz:admins:role=owner#aai.egi.eu']`
 
