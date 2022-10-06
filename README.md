@@ -36,3 +36,12 @@ These control the behaviour:
     Example:
     `export SSH_AUTHORISE_VOS="['urn:mace:egi.eu:group:cryoem.instruct-eric.eu:admins:role=owner#aai.egi.eu', 'urn:mace:egi.eu:group:umsa.cerit-sc.cz:admins:role=owner#aai.egi.eu']`
 
+# Usage
+
+The tools will output the two config files `motley_cue.conf` and
+`feudal_adapter.conf` in the folder in which it is called.
+
+Ideally it is called in `/etc/motley_cue` with the access token of the
+user as the only parameter:
+
+`contextualise_ssh_server <OIDC_ACCESS_TOKEN>`
