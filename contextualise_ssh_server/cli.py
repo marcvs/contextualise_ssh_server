@@ -1,6 +1,6 @@
 """Console script for contextualise_ssh_server."""
 import logging
-import contextualise_ssh_server.logsetup
+# import contextualise_ssh_server.logsetup
 import sys
 
 from jinja2 import Template
@@ -75,7 +75,7 @@ def main():
         logger.error("Failed to get userinfos for the provided access token")
         sys.exit(1)
 
-
+    vo_list = []
     temp = os.getenv("SSH_AUTHORISE_OTHERS_IN_MY_VO")
     if temp is not None:
         vo_list = user_infos.get("eduperson_entitlement")
@@ -85,7 +85,6 @@ def main():
         temp = os.getenv("SSH_AUTHORISE_VOS")
         if temp is not None:
             vo_list = temp
-
 
     # collect data for motley_cue.conf
     mc_config = {"user_sub": user_infos.get("sub"),
