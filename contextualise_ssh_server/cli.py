@@ -9,7 +9,7 @@ import os
 
 from contextualise_ssh_server.config import CONFIG
 from contextualise_ssh_server.parse_args import args
-from flaat import BaseFlaat
+from flaat import BaseFlaat, FlaatException
 
 logger = logging.getLogger(__name__)
 TRUSTED_OP_LIST = '''
@@ -73,7 +73,11 @@ def main():
         sys.exit(0)
 
     flaat = get_flaat()
-    user_infos = flaat.get_user_infos_from_access_token(args.access_token)
+    try:
+        user_infos = flaat.get_user_infos_from_access_token(args.access_token)
+    except FlaatException as e:
+        logger.error(F"FlaatException: {e}")
+        sys.exit(3)
     if user_infos is None:
         logger.error("Failed to get userinfos for the provided access token")
         sys.exit(1)
