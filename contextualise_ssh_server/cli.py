@@ -1,6 +1,6 @@
 """Console script for contextualise_ssh_server."""
 import logging
-# import contextualise_ssh_server.logsetup
+import contextualise_ssh_server.logsetup
 import sys
 
 from jinja2 import Template
@@ -42,6 +42,8 @@ def get_flaat(trusted_op_list=[]):
 
     temp = CONFIG.get("trust", "trusted_op_list", fallback=TRUSTED_OP_LIST)
     trusted_op_list = [x for x in temp.split("\n") if x != ""]
+    logger.debug(F"trusted op list: {trusted_op_list}")
+    print(trusted_op_list)
     flaat.set_trusted_OP_list(trusted_op_list)
 
     # flaat.set_verbosity(0, set_global =False)
@@ -72,7 +74,7 @@ def main():
         sys.exit(0)
 
     flaat = get_flaat()
-    user_infos = flaat.get_user_infos_from_access_token(args.access_token[0])
+    user_infos = flaat.get_user_infos_from_access_token(args.access_token)
     if user_infos is None:
         logger.error("Failed to get userinfos for the provided access token")
         sys.exit(1)
