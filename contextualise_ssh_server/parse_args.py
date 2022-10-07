@@ -12,15 +12,11 @@ def parseOptions():
     basename = os.path.basename(sys.argv[0]).rstrip('.py')
     dirname  = os.path.dirname(__file__)
 
-    config_dir  = os.environ['HOME'] + F'/.config/{basename}'
     # config_file = os.environ['HOME']+F'/.config/{basename}.conf'
     config_file = F'/etc/contextualise_ssh_server.conf'
     config_file = F'contextualise_ssh_server.conf'
     log_file    = folder_of_executable + F'/{basename}.log'
     log_file    = ""
-
-    if not os.path.exists(config_dir):
-        os.mkdir(config_dir)
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
