@@ -62,7 +62,7 @@ find with ` contextualise_ssh_server -b`
 yum install motley-cue pam-ssh-oidc
 ```
 
-Typical call in a VM startup would be:
+## Include this in the VM startup:
 
 ```
 # enable tokens in pam:
