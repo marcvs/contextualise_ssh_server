@@ -50,3 +50,29 @@ user as the only parameter:
 
 For enabling and disabling tokens in pam, you can use the scripts
 `enable-pam-ssh.sh` and `disable-pam-ssh.sh`
+
+They are installed into the same folder as the python file, which you can
+find with ` contextualise_ssh_server -b`
+
+# VM Integration
+
+## Install packages to VM image:
+
+```
+yum install motley-cue pam-ssh-oidc
+```
+
+Typical call in a VM startup would be:
+
+```
+# enable tokens in pam:
+`contextualise_ssh_server -b`/enable-pam-ssh.sh
+
+# create motley-cue config
+cd /tmp
+contextualise_ssh_server $USER_OIDC_ACCESS_TOKEN
+
+# place them in /etc/motley_cue/ 
+sudo cat motley_cue.conf     > /etc/motley_cue/motley_cue.conf
+sudo cat feudal_adapter.conf > /etc/motley_cue/feudal_adapter.conf
+```
