@@ -21,7 +21,6 @@ https://login-dev.helmholtz.de/oauth2/
 https://login.helmholtz.de/oauth2/
 https://unity.eudat-aai.fz-juelich.de/oauth2/
 https://services.humanbrainproject.eu/oidc/
-https://accounts.google.com/
 https://aai.egi.eu/oidc/
 https://aai.egi.eu/auth/realms/egi
 https://aai-demo.egi.eu/auth/realms/egi
@@ -67,6 +66,10 @@ def render_template(template_file_in, template_file_out, config):
 
 def main():
     """Console script for contextualise_ssh_server."""
+
+    if args.base:
+        print(os.path.dirname(__file__))
+        sys.exit(0)
 
     flaat = get_flaat()
     user_infos = flaat.get_user_infos_from_access_token(args.access_token[0])
