@@ -15,16 +15,16 @@ from contextualise_ssh_server.parse_args import args
 logger = logging.getLogger(__name__)
 
 CONFIG = ConfigParser(interpolation=ExtendedInterpolation())
-CONFIG.optionxform = lambda option: option
+
 
 def set_defaults():
-    CONFIG.read_dict ({'main': {
+    CONFIG.read_dict({'main': {
         'config'      :  args.config,
         'loglevel'    :  args.loglevel,
         'logfile'     :  args.logfile,
         'verbose'     :  args.verbose,
         'debug'       :  args.debug,
-        }})
+    }})
 
 
 def load_config():
@@ -33,7 +33,6 @@ def load_config():
     Config locations, by priority (first one wins)
     """
     files = []
-
 
     files += [
         Path(F'/etc/{args.basename}.conf'),
@@ -61,21 +60,21 @@ def load_config():
     if not read_a_config:
         filelist = [str(f) for f in files]
         filestring = "\n    ".join(filelist)
-        logger.warning(F"Warning: Could not read any config file from \n"\
+        logger.warning(F"Warning: Could not read any config file from \n"
                 F"    {filestring}")
         # sys.exit(4)
 
 
 def test_config():
     try:
-        delme = CONFIG['main']['logfile']
-        delme = CONFIG['main']['loglevel']
-        delme = CONFIG['main']['verbose']
+        _ = CONFIG['main']['logfile']
+        _ = CONFIG['main']['loglevel']
+        _ = CONFIG['main']['verbose']
     except KeyError as e:
         logging.error(F"Cannot find required config entry: {e}")
         sys.exit(3)
 
+
 set_defaults()
 load_config()
 test_config()
-

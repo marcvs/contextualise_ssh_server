@@ -38,7 +38,6 @@ https://wlcg.cloud.cnaf.infn.it/
 '''
 
 
-
 def get_flaat(trusted_op_list=[]):
     flaat = BaseFlaat()
 
