@@ -77,14 +77,12 @@ def main():
 
 
     temp = os.getenv("SSH_AUTHORISE_OTHERS_IN_MY_VO")
-    print(F"temp: >>{temp}<<")
     if temp is not None:
         vo_list = user_infos.get("eduperson_entitlement")
 
     else:
         # overwritten by environment variable:
         temp = os.getenv("SSH_AUTHORISE_VOS")
-        print(F"temp: >>{temp}<<")
         if temp is not None:
             vo_list = temp
 

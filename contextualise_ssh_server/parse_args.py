@@ -36,7 +36,7 @@ def parseOptions():
                                                 help='Debugging Level')
     
 
-    parser.add_argument(dest="access_token",    default=None, nargs="*",
+    parser.add_argument(dest="access_token",    default=None, nargs="+",
                                                 help="An access token (without 'Bearer ')",)
     return parser
 
