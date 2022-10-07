@@ -43,7 +43,6 @@ def get_flaat(trusted_op_list=[]):
     temp = CONFIG.get("trust", "trusted_op_list", fallback=TRUSTED_OP_LIST)
     trusted_op_list = [x for x in temp.split("\n") if x != ""]
     logger.debug(F"trusted op list: {trusted_op_list}")
-    print(trusted_op_list)
     flaat.set_trusted_OP_list(trusted_op_list)
 
     # flaat.set_verbosity(0, set_global =False)
