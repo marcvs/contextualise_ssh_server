@@ -41,7 +41,7 @@ These control the behaviour:
 The tools will output the two config files `motley_cue.conf` and
 `feudal_adapter.conf` in the folder in which it is called.
 
-Ideally it is called in `/etc/motley_cue` with the access token of the
+Those need to be placed in `/etc/motley_cue` with the access token of the
 user as the only parameter:
 
 `contextualise_ssh_server <OIDC_ACCESS_TOKEN>`
