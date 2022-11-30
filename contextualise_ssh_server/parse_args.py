@@ -32,7 +32,7 @@ def parseOptions():
     parser.add_argument(dest="access_token",    default=None, nargs="?",
                                                 help="An access token (without 'Bearer ')",)
     parser.add_argument("--base",       "-b",   action="store_true", default=False)
-    parser.add_argument("--sudo",       "-s",   default=False, action="store_true")
+    parser.add_argument("--no-sudo",            default=True, action="store_false", dest=sudo)
     return parser
 
 
