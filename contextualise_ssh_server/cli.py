@@ -77,6 +77,19 @@ def _set_usercomment(username, comment):
         sys.exit(42)
 
 
+def _user_exists(username):
+    """check if user exists"""
+    try:
+        rv = subprocess.run(["id", username], check=True)
+        if rv.returncode == 0:
+            return True
+        return False
+    except CalledProcessError as e:
+        msg = (e.stderr or e.stdout or b"").decode("utf-8").strip()
+        logger.error("Error executing '{}': {}".format(" ".join(e.cmd), msg or "<no output>"))
+        return False
+
+
 def main():
     """Console script for contextualise_ssh_server."""
 
@@ -162,7 +175,10 @@ def main():
         print(F"iss: {iss}")
         user_gecos = F"{quote_plus(sub)}@{quote_plus(iss)}"
         print(F"{user_gecos}")
-        _set_usercomment("cloudadm", user_gecos)
+        if__user_exists("cloudadm"):
+            _set_usercomment("cloudadm", user_gecos)
+        else:
+            print("User cloudadmin does not exist")
 
 
 if __name__ == "__main__":
