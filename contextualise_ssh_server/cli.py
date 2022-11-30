@@ -175,10 +175,10 @@ def main():
         print(F"iss: {iss}")
         user_gecos = F"{quote_plus(sub)}@{quote_plus(iss)}"
         print(F"{user_gecos}")
-        if__user_exists("cloudadm"):
-            _set_usercomment("cloudadm", user_gecos)
+        if _user_exists(args.user):
+            _set_usercomment(args.user, user_gecos)
         else:
-            print("User cloudadmin does not exist")
+            print(F"User {args.user} does not exist")
 
 
 if __name__ == "__main__":
