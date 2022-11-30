@@ -6,6 +6,8 @@ import sys
 from jinja2 import Template
 import jinja2
 import os
+import subprocess
+from subprocess import CalledProcessError
 
 from contextualise_ssh_server.config import CONFIG
 from contextualise_ssh_server.parse_args import args
@@ -63,6 +65,16 @@ def render_template(template_file_in, template_file_out, config):
         logger.error(
             f"did not find variables for template file {template_file_out}: {e}"
         )
+
+
+def _set_usercomment(username, comment):
+    """Set comment field for user"""
+    try:
+        subprocess.run(["usermod", "-c", comment, username], check=True)
+    except CalledProcessError as e:
+        msg = (e.stderr or e.stdout or b"").decode("utf-8").strip()
+        logger.error("Error executing '{}': {}".format(" ".join(e.cmd), msg or "<no output>"))
+        sys.exit(42)
 
 
 def main():
@@ -136,12 +148,11 @@ def main():
             from urllib.parse import quote_plus
         except ImportError:
             from urllib import quote_plus
-        import requests
-        import json
-
-        resp = requests.get('http://localhost:8080/user/deploy',
-                headers={'Authorization': F'Bearer {args.access_token}'})
-        print(F"username: {resp.json()['credentials']['ssh_user']}")
+        # import requests
+        # import json
+        # resp = requests.get('http://localhost:8080/user/deploy',
+        #         headers={'Authorization': F'Bearer {args.access_token}'})
+        # print(F"username: {resp.json()['credentials']['ssh_user']}")
 
         # render output for sudo:
 
@@ -150,8 +161,8 @@ def main():
         print(F"sub: {sub}")
         print(F"iss: {iss}")
         user_gecos = F"{quote_plus(sub)}@{quote_plus(iss)}"
-        print("d7a53cbe3e966c53ac64fde7355956560282158ecac8f3d2c770b474862f4756%40egi.eu@https%3A%2F%2Faai.egi.eu%2Fauth%2Frealms%2Fegi")
         print(F"{user_gecos}")
+        _set_usercomment("cloudadm", user_gecos)
 
 
 if __name__ == "__main__":
