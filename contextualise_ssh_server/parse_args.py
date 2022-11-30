@@ -32,7 +32,9 @@ def parseOptions():
     parser.add_argument(dest="access_token",    default=None, nargs="?",
                                                 help="An access token (without 'Bearer ')",)
     parser.add_argument("--base",       "-b",   action="store_true", default=False)
-    parser.add_argument("--no-sudo",            default=True, action="store_false", dest=sudo)
+    parser.add_argument("--no-sudo",            default=True, action="store_false", dest="sudo",
+            help="Map user to a special user, assuming that it's the one able to sudo")
+    parser.add_argument("--user",               default="cloudadm")
     return parser
 
 
