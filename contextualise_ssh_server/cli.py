@@ -131,6 +131,28 @@ def main():
     fa_output = "feudal_adapter.conf"
     render_template(fa_template, fa_output, fa_config)
 
+    if args.sudo:
+        try:
+            from urllib.parse import quote_plus
+        except ImportError:
+            from urllib import quote_plus
+        import requests
+        import json
+
+        resp = requests.get('http://localhost:8080/user/deploy',
+                headers={'Authorization': F'Bearer {args.access_token}'})
+        print(F"username: {resp.json()['credentials']['ssh_user']}")
+
+        # render output for sudo:
+
+        sub = user_infos.get("sub")
+        iss = user_infos.get("iss")
+        print(F"sub: {sub}")
+        print(F"iss: {iss}")
+        user_gecos = F"{quote_plus(sub)}@{quote_plus(iss)}"
+        print("d7a53cbe3e966c53ac64fde7355956560282158ecac8f3d2c770b474862f4756%40egi.eu@https%3A%2F%2Faai.egi.eu%2Fauth%2Frealms%2Fegi")
+        print(F"{user_gecos}")
+
 
 if __name__ == "__main__":
     sys.exit(main())  # pragma: no cover
