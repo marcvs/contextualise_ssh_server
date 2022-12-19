@@ -86,7 +86,7 @@ def _user_exists(username):
         return False
     except CalledProcessError as e:
         msg = (e.stderr or e.stdout or b"").decode("utf-8").strip()
-        logger.error("Error executing '{}': {}".format(" ".join(e.cmd), msg or "<no output>"))
+        logger.warning("executing '{}': {}".format(" ".join(e.cmd), msg or "<no output>"))
         return False
 
 
