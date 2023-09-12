@@ -184,7 +184,7 @@ def main():
         if _user_exists(args.user):
             _set_usercomment(args.user, user_gecos)
         else:
-            print(f"User {args.user} does not exist")
+            print(f"User {args.user} does not exist: skipping. This is fine.")
 
 
 if __name__ == "__main__":
