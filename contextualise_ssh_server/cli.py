@@ -14,7 +14,7 @@ from contextualise_ssh_server.parse_args import args
 from flaat import BaseFlaat, FlaatException
 
 logger = logging.getLogger(__name__)
-TRUSTED_OP_LIST = '''
+TRUSTED_OP_LIST = """
 https://b2access.eudat.eu/oauth2/
 https://b2access-integration.fz-juelich.de/oauth2
 https://unity.helmholtz-data-federation.de/oauth2/
@@ -36,7 +36,7 @@ https://iam.extreme-datacloud.eu/
 https://oidc.scc.kit.edu/auth/realms/kit/
 https://proxy.demo.eduteams.org
 https://wlcg.cloud.cnaf.infn.it/
-'''
+"""
 
 
 def get_flaat(trusted_op_list=[]):
@@ -44,7 +44,7 @@ def get_flaat(trusted_op_list=[]):
 
     temp = CONFIG.get("trust", "trusted_op_list", fallback=TRUSTED_OP_LIST)
     trusted_op_list = [x for x in temp.split("\n") if x != ""]
-    logger.debug(F"trusted op list: {trusted_op_list}")
+    logger.debug(f"trusted op list: {trusted_op_list}")
     flaat.set_trusted_OP_list(trusted_op_list)
 
     # flaat.set_verbosity(0, set_global =False)
@@ -73,7 +73,9 @@ def _set_usercomment(username, comment):
         subprocess.run(["usermod", "-c", comment, username], check=True)
     except CalledProcessError as e:
         msg = (e.stderr or e.stdout or b"").decode("utf-8").strip()
-        logger.error("Error executing '{}': {}".format(" ".join(e.cmd), msg or "<no output>"))
+        logger.error(
+            "Error executing '{}': {}".format(" ".join(e.cmd), msg or "<no output>")
+        )
         sys.exit(42)
 
 
@@ -86,7 +88,9 @@ def _user_exists(username):
         return False
     except CalledProcessError as e:
         msg = (e.stderr or e.stdout or b"").decode("utf-8").strip()
-        logger.warning("executing '{}': {}".format(" ".join(e.cmd), msg or "<no output>"))
+        logger.warning(
+            "executing '{}': {}".format(" ".join(e.cmd), msg or "<no output>")
+        )
         return False
 
 
@@ -101,7 +105,7 @@ def main():
     try:
         user_infos = flaat.get_user_infos_from_access_token(args.access_token)
     except FlaatException as e:
-        logger.error(F"FlaatException: {e}")
+        logger.error(f"FlaatException: {e}")
         sys.exit(3)
     if user_infos is None:
         logger.error("Failed to get userinfos for the provided access token")
@@ -119,39 +123,41 @@ def main():
             vo_list = temp
 
     # collect data for motley_cue.conf
-    mc_config = {"user_sub": user_infos.get("sub"),
-                 "user_iss": user_infos.get("iss"),
-                 "vo_list": vo_list}
+    mc_config = {
+        "user_sub": user_infos.get("sub"),
+        "user_iss": user_infos.get("iss"),
+        "vo_list": vo_list,
+    }
 
     # render motley-cue.conf:
     mc_template = CONFIG.get(
-        "templates", "motley_cue.conf", fallback=F"{args.dirname}/motley_cue.template.conf"
+        "templates",
+        "motley_cue.conf",
+        fallback=f"{args.dirname}/motley_cue.template.conf",
     )
     mc_output = "motley_cue.conf"
     render_template(mc_template, mc_output, mc_config)
 
     # collect data for feudal_adapter.conf
-    asr = CONFIG.get("users", "assurance",
-                            fallback="profile/cappuccino")
+    asr = CONFIG.get("users", "assurance", fallback="profile/cappuccino")
     asr = [x for x in asr.split("\n") if x != ""]
     assurance = "\n    ".join(asr)
 
     fa_config = {
-        "assurance_prefix": CONFIG.get("users", "assurance_prefx",
-                            fallback="https://refeds.org/assurance/"),
-        "assurance":        assurance,
-        "shell":            CONFIG.get("users", "shell",
-                            fallback="/bin/bash"),
-        "username_mode":    CONFIG.get("users", "username_mode",
-                            fallback="friendly"),
-        "primary_group":    CONFIG.get("users", "primary_group",
-                            fallback="cool"),
-        "":            CONFIG.get("users", "",
-                            fallback=""),
+        "assurance_prefix": CONFIG.get(
+            "users", "assurance_prefx", fallback="https://refeds.org/assurance/"
+        ),
+        "assurance": assurance,
+        "shell": CONFIG.get("users", "shell", fallback="/bin/bash"),
+        "username_mode": CONFIG.get("users", "username_mode", fallback="friendly"),
+        "primary_group": CONFIG.get("users", "primary_group", fallback="cool"),
+        "": CONFIG.get("users", "", fallback=""),
     }
     # render feudal_adapter.conf:
     fa_template = CONFIG.get(
-        "templates", "feudal_adapter.conf", fallback=F"{args.dirname}/feudal_adapter.template.conf"
+        "templates",
+        "feudal_adapter.conf",
+        fallback=f"{args.dirname}/feudal_adapter.template.conf",
     )
     fa_output = "feudal_adapter.conf"
     render_template(fa_template, fa_output, fa_config)
@@ -171,14 +177,14 @@ def main():
 
         sub = user_infos.get("sub")
         iss = user_infos.get("iss")
-        print(F"sub: {sub}")
-        print(F"iss: {iss}")
-        user_gecos = F"{quote_plus(sub)}@{quote_plus(iss)}"
-        print(F"{user_gecos}")
+        print(f"sub: {sub}")
+        print(f"iss: {iss}")
+        user_gecos = f"{quote_plus(sub)}@{quote_plus(iss)}"
+        print(f"{user_gecos}")
         if _user_exists(args.user):
             _set_usercomment(args.user, user_gecos)
         else:
-            print(F"User {args.user} does not exist")
+            print(f"User {args.user} does not exist")
 
 
 if __name__ == "__main__":
