@@ -14,6 +14,7 @@ from contextualise_ssh_server.parse_args import args
 from flaat import BaseFlaat, FlaatException
 
 logger = logging.getLogger(__name__)
+VO_CLAIM_CANDIDATES = ("entitlements", "eduperson_entitlement")
 TRUSTED_OP_LIST = """
 https://b2access.eudat.eu/oauth2/
 https://b2access-integration.fz-juelich.de/oauth2
@@ -49,6 +50,14 @@ def get_flaat(trusted_op_list=[]):
 
     # flaat.set_verbosity(0, set_global =False)
     return flaat
+
+
+def _select_vo_claim(user_infos):
+    """Return the newest VO claim present in the token, with legacy fallback."""
+    for claim in VO_CLAIM_CANDIDATES:
+        if user_infos.get(claim):
+            return claim
+    return VO_CLAIM_CANDIDATES[0]
 
 
 def render_template(template_file_in, template_file_out, config):
@@ -111,10 +120,11 @@ def main():
         logger.error("Failed to get userinfos for the provided access token")
         sys.exit(1)
 
+    vo_claim = _select_vo_claim(user_infos)
     vo_list = []
     temp = os.getenv("SSH_AUTHORISE_OTHERS_IN_MY_VO")
     if temp is not None:
-        vo_list = user_infos.get("eduperson_entitlement")
+        vo_list = user_infos.get(vo_claim) or []
 
     else:
         # overwritten by environment variable:
@@ -122,11 +132,30 @@ def main():
         if temp is not None:
             vo_list = temp
 
+    asr = CONFIG.get("users", "assurance", fallback="profile/cappuccino")
+    asr = [x for x in asr.split("\n") if x != ""]
+    assurance = "\n    ".join(asr)
+    assurance_enabled = CONFIG.getboolean("users", "assurance_enabled", fallback=False)
+    assurance_prefix = CONFIG.get(
+        "users", "assurance_prefix", fallback="https://refeds.org/assurance/"
+    )
+    if assurance_enabled and not assurance.strip():
+        logger.warning(
+            "assurance_enabled is set but [users] assurance is empty; disabling"
+        )
+        assurance_enabled = False
+
     # collect data for motley_cue.conf
     mc_config = {
         "user_sub": user_infos.get("sub"),
         "user_iss": user_infos.get("iss"),
         "vo_list": vo_list,
+        "vo_claim": vo_claim,
+        "scopes": ["openid", "profile", "email", vo_claim],
+        "group_claims": [vo_claim, "wlcg.groups"],
+        "assurance_enabled": assurance_enabled,
+        "assurance_prefix": assurance_prefix,
+        "assurance": assurance,
     }
 
     # render motley-cue.conf:
@@ -139,14 +168,8 @@ def main():
     render_template(mc_template, mc_output, mc_config)
 
     # collect data for feudal_adapter.conf
-    asr = CONFIG.get("users", "assurance", fallback="profile/cappuccino")
-    asr = [x for x in asr.split("\n") if x != ""]
-    assurance = "\n    ".join(asr)
-
     fa_config = {
-        "assurance_prefix": CONFIG.get(
-            "users", "assurance_prefx", fallback="https://refeds.org/assurance/"
-        ),
+        "assurance_prefix": assurance_prefix,
         "assurance": assurance,
         "shell": CONFIG.get("users", "shell", fallback="/bin/bash"),
         "username_mode": CONFIG.get("users", "username_mode", fallback="friendly"),
